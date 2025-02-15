@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void leitura(int *p,int q);
+void leitura(int *pLeitura,int q);
 void resultante(int *pa,int *pb,int *pc,int q);
-void imprime(int *p,int q);
+void imprime(int *pImprime,int q);
 
 main()
 {
@@ -29,13 +29,13 @@ printf("\nImprime - Vetor c:");
 imprime(c,qtde);
 }//main
 
-void leitura(int *p,int q)
+void leitura(int *pLeitura,int q)
 {
 int i;
-for(i=0;i<q;i++,p++)
+for(i=0;i<q;i++,pLeitura++)
   {
   printf("\nvet[%i]= ",i);
-  scanf("%i",p);
+  scanf("%i",pLeitura);
   fflush(stdin);
   }//for
 }//leitura
@@ -47,11 +47,11 @@ for(i=0;i<q;i++,pa++,pb++,pc++)
   *pc=*pa+*pb;
 }//resultante
   
-void imprime(int *p,int q)
+void imprime(int *pImprime,int q)
 {
 int i;
-for(i=0;i<q;i++,p++)
-  printf("\nvet[%i]= %i",i,*p);
+for(i=0;i<q;i++,pImprime++)
+  printf("\nvet[%i]= %i",i,*pImprime);
 printf("\n\n\n");
 system("pause");
 }//imprime
