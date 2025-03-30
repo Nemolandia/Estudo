@@ -3,7 +3,7 @@
  */
 
 #include<stdio.h>
-#include "Lista_dupla.h"
+#include "Lista_dupla_execucao.c"
 
 int main(){
   int num, opcao;

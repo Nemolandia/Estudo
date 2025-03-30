@@ -6,149 +6,138 @@ RA: 190691*/
 #include <stdio.h>
 #include <stdlib.h>
 
-//Aloca espaço de memória para a lista
-No_lista aloca()
+// Aloca um novo nó
+No_lista* aloca()
 {
-    No_lista *novo = (No_lista*)malloc(sizeof(No_lista));
+    No_lista *novo;
+    novo = (No_lista*)malloc(sizeof(No_lista));
 
-    if(novo == NULL)
+    if (!novo)
     {
-        printf ("Sem espaço de memoria");
+        printf("Sem espaço de memória\n");
         exit(1);
     }
-}
+    return novo;
+}//aloca
 
-//Cria uma lsita vazia
+// Cria uma lista vazia
 void cria(Lista *p_l)
 {
     *p_l = NULL;
-}
-
-//Mostra se a lista está vazia
-int vazia (Lista *p_l)
-{
-    return (*p_l == NULL);
 }//cria
 
-//Insere um novo Nó no início da lista
-void insere_inicio (Lista *p_l, elem_t e)
+// Verifica se a lista está vazia
+int vazia(Lista *p_l)
 {
-    No_lista *novo = aloca();
+    return (*p_l == NULL);
+}//vazia
 
+// Insere um novo nó no início
+void insere_inicio(Lista *p_l, elem_t e)
+{
+    No_lista *novo;
+
+    novo = aloca();
     novo->info = e;
     novo->prox = *p_l;
-    *p_l = novo;
     novo->ant = NULL;
+
+    if (*p_l)
+    {
+        (*p_l)->ant = novo;
+    }
+    *p_l = novo;
 }//insere_inicio
 
-//Insere um novo Nó no fim da lista
-void insere_fim (Lista *p_l, elem_t e)
+// Insere um novo nó no fim
+void insere_fim(Lista *p_l, elem_t e)
 {
-    No_lista *novo = aloca();
-    No_lista *aux = *p_l;
+    No_lista *novo, *aux;
 
+    novo = aloca();
     novo->info = e;
     novo->prox = NULL;
-    novo->ant = aux;
 
-    if (*p_l == NULL)
+    if (!*p_l)
     {
+        novo->ant = NULL;
         *p_l = novo;
     }
     else
     {
-        while (aux->prox != NULL)
+        aux = *p_l;
+        while (aux->prox)
         {
             aux = aux->prox;
         }
         aux->prox = novo;
+        novo->ant = aux;
     }
 }//insere_fim
 
-//Insere na lista a informação em ordem crescente
-int insere_ordenado (Lista *p_l, elem_t e)
+// Insere um nó ordenado
+int insere_ordenado(Lista *p_l, elem_t e)
 {
-    No_lista *novo = aloca();
-    No_lista *aux = *p_l;
+    No_lista *novo, *aux;
+
+    novo = aloca();
+    aux = *p_l;
     novo->info = e;
 
-    //Caso a lista esteja vazia ou o elemento de início for maior que o elemento a ser inserido
-    if (*p_l == NULL || (*p_l)->info >= e)
+    if (!aux || aux->info >= e)
     {
-        novo->prox = *p_l;
+        novo->prox = aux;
         novo->ant = NULL;
-        if (*p_l != NULL) 
+
+        if (aux)
         {
-            (*p_l)->ant = novo;
+            aux->ant = novo;
         }
         *p_l = novo;
         return 1;
     }
-
-    //Se não for o caso do início, então percorre a lista
-    while (aux->prox != NULL && aux->prox->info < e)
+    while (aux->prox && aux->prox->info < e)
     {
         aux = aux->prox;
     }
-
-    //Verifica se o valor já está na lista
-    if (aux->info == e)
-    {
-        free(novo);
-        return 0;
-    }
-
     novo->prox = aux->prox;
     novo->ant = aux;
 
-    if (aux->prox != NULL)
+    if (aux->prox)
     {
         aux->prox->ant = novo;
     }
-
     aux->prox = novo;
     return 1;
 }//insere_ordenado
 
-//verifica se a lista está vazia e se eiste algum par desordenado
-int ordenada (Lista *p_l)
+// Verifica se a lista está ordenada
+int ordenada(Lista *p_l)
 {
-    No_lista *aux = *p_l;
+    No_lista *aux;
 
-    if (*p_l == NULL || (*p_l)->prox == NULL)
-    {
-        printf("Lista vazia ou com um único elemento.\n");
-        return 1;
+    aux = *p_l;
 
-    while (aux->prox != NULL)
+    while (aux && aux->prox)
     {
         if (aux->info > aux->prox->info)
         {
-            printf("Par desordenado encontrado\n");
             return 0;
         }
         aux = aux->prox;
     }
-
-    printf("Lista devidamente ordenada\n");
     return 1;
 }//ordenada
 
-//troca os valores na lista para ordena-la caso esteja em ordem errada e informa se a lista está vazia
+// Ordena a lista
 void ordena(Lista *p_l)
 {
     No_lista *i, *j;
     elem_t aux;
 
-    if (*p_l == NULL || (*p_l)->prox == NULL)
+    for (i = *p_l; i; i = i->prox)
     {
-        printf("Lista vazia ou com um único elemento. Nada a ordenar.\n");
-        return;
-    }
-
-    for (i = *p_l; i != NULL; i = i->prox)
-    {
-        for (j = i->prox; j != NULL; j = j->prox)
+        for (j = i->prox; j; j = j->prox)
         {
             if (i->info > j->info)
             {
@@ -160,76 +149,72 @@ void ordena(Lista *p_l)
     }
 }//ordena
 
-//remove o primeiro elemento da lista
+// Remove o primeiro elemento
 int remove_inicio(Lista *p_l, elem_t *p_e)
 {
-    No_lista *aux_remove = *p_l;
+    No_lista *aux;
 
-    if (*p_l == NULL)
+    if (!*p_l)
     {
-        printf("Lista Vazia\n");
         return 0;
     }
+    aux = *p_l;
+    *p_e = aux->info;
+    *p_l = aux->prox;
 
-    *p_e = aux_remove->info;
-    *p_l = aux_remove->prox;
-
-    if (*p_l != NULL)
+    if (*p_l)
     {
         (*p_l)->ant = NULL;
     }
-
-    free(aux_remove);
+    free(aux);
     return 1;
 }//remove_inicio
 
-//remove o último elemento da lista
+// Remove o último elemento
 int remove_fim(Lista *p_l, elem_t *p_e)
 {
-    No_lista *aux = *p_l;
+    No_lista *aux;
 
-    if (*p_l == NULL)
+    if (!*p_l)
     {
-        printf("Lista Vazia\n");
         return 0;
     }
+    aux = *p_l;
 
-    while (aux->prox != NULL)
+    while (aux->prox)
     {
         aux = aux->prox;
     }
-
     *p_e = aux->info;
 
-    if (aux->ant != NULL)
+    if (aux->ant)
     {
         aux->ant->prox = NULL;
-    } 
+    }
     else
     {
-        *p_l = NULL; //Caso a lista tenha um único elemento
+        *p_l = NULL;
     }
-
     free(aux);
     return 1;
 }//remove_fim
 
-//remove um valor específico da lista
+// Remove um elemento específico
 int remove_valor(Lista *p_l, elem_t e)
 {
-    No_lista *aux = *p_l;
+    No_lista *aux;
 
-    while (aux != NULL && aux->info != e)
+    aux = *p_l;
+
+    while (aux && aux->info != e)
     {
         aux = aux->prox;
     }
-
-    if (aux == NULL)
+    if (!aux)
     {
-        return 0; //Elemento não encontrado
+        return 0;
     }
-
-    if (aux->ant != NULL)
+    if (aux->ant)
     {
         aux->ant->prox = aux->prox;
     }
@@ -237,74 +222,51 @@ int remove_valor(Lista *p_l, elem_t e)
     {
         *p_l = aux->prox;
     }
-
-    if (aux->prox != NULL)
+    if (aux->prox)
     {
         aux->prox->ant = aux->ant;
     }
-
     free(aux);
     return 1;
 }//remove_valor
 
+// Inverte a lista
 void inverte(Lista *p_l)
 {
-    No_lista *aux = *p_l;
-    No_lista *aux_b = NULL;
+    No_lista *aux, *temp;
 
-    if (*p_l == NULL)
-    {
-        printf("Lista vazia.\n");
-        return;
-    }
+    aux = *p_l;
 
-    //Inverte os ponteiros de cada nó
-    while (aux != NULL)
+    while (aux)
     {
-        aux_b = aux->prox;
+        temp = aux->prox;
         aux->prox = aux->ant;
-        aux->ant = aux_b;
-        aux = aux->ant; //Como os ponteiros foram invertidos, agora aux->ant aponta para o próximo nó
-    }
-
-    //Atualiza o início da lista
-    if (aux_b != NULL)
-    {
-        *p_l = aux_b->ant; //O último nó será o novo início da lista
+        aux->ant = temp;
+        *p_l = aux;
+        aux = temp;
     }
 }//inverte
 
+// Libera a lista
 void libera(Lista *p_l)
 {
-    No_lista *aux = *p_l;
-    No_lista *temp;
+    No_lista *aux;
 
-    //Percorre a lista e libera os nós um por um
-    while (aux != NULL)
+    while (*p_l)
     {
-        temp = aux;
-        aux = aux->prox;
-        free(temp);
+        aux = *p_l;
+        *p_l = aux->prox;
+        free(aux);
     }
-
-    //Depois de liberar todos os nós, a lista deve ser nula
-    *p_l = NULL;
 }//libera
 
-//Exibe o conteúdo da lista
+// Exibe a lista
 void exibe(Lista *p_l)
 {
-    No_lista *aux = *p_l;
-    
-    if (*p_l == NULL) {
-        printf("Lista vazia.\n");
-        return;
-    }
+    No_lista *aux;
 
-    printf("Conteúdo da lista: ");
-    
-    // Percorre a lista e imprime os valores dos nós
-    while (aux != NULL)
+    aux = *p_l;
+    while (aux)
     {
         printf("%d ", aux->info);
         aux = aux->prox;
