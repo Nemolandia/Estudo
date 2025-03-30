@@ -53,5 +53,3 @@ void libera(Lista *p_l);
 
 /* Exibe o conteúdo da lista */
 void exibe(Lista *p_l);
-
-void aloca (int *p_aloca, int tam);
