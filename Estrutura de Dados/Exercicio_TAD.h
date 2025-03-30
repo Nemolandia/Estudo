@@ -1,5 +1,5 @@
 /*
-* ExercícioTAD.h - Definição das operações realizadas na sacola
+* Exercício_TAD.h - Definição das operações realizadas na sacola
 * Autor: Jeovanni Conservani Silva
 */
 

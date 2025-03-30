@@ -1,10 +1,10 @@
 /*
-* ExercícioTAD.c - Implementação das operações realizadas na sacola (TAD Bag)
+* Exercício_TAD.c - Implementação das operações realizadas na sacola (TAD Bag)
 * Autor: Jeovanni Conservani Silva
 */
 
 #include <stdio.h>
-#include "strings.h"
+#include "Exercicio_TAD.h"
 
 int main ()
 {
