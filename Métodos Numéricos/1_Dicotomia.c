@@ -24,7 +24,7 @@ int main()
     int i, grau, *ponteiroMain = NULL;
     float multi[7], tamMain = 0, erro = 0, a, b, k;
 
-    aloca(ponteiroMain, tamMain);
+    aloca(&ponteiroMain, tamMain);
 
     printf("Informe o grau da funcao (2 a 6): ");
     scanf("%i", &grau);
@@ -69,23 +69,20 @@ int main()
     printf ("\nValor de k: %f\n", k);
 
     //Exibindo o cabecalho
-
     ImprimirCabecalhoTabela();
 
-    while (i <= k)
-    {
         //Implementacao da DICOTOMIA
-        dicotomia(a, b, k, multi, grau);
+            dicotomia(a, b, k, multi, grau);
+            
         //Exibindo os valores na tabela
         ImprimirTabela(1, 2, 3, 4, 5, 6, 7, '+', '-');
-    }
 
     system("pause");
 }
 
 void aloca (int *ponteiroAloca, int tam)
 {
-    if((ponteiroAloca=(int*)realloc(ponteiroAloca, tam*sizeof(int)))==NULL)
+    if((*ponteiroAloca=(int*)realloc(*ponteiroAloca, tam*sizeof(int)))==NULL)
     exit(1);
 }
 
@@ -141,8 +138,6 @@ void dicotomia(float a, float b, float erro, float multi[], int grau)
         fB = funcaoX(b, multi, grau);
         fM = funcaoX(m, multi, grau);
 
-        ImprimirTabela(iteracao, a, b, m, fA, fB, fM, fAfM, fMfB);
-
         if (fAfM > 0)
         {
             fAfM = '+';
@@ -171,5 +166,7 @@ void dicotomia(float a, float b, float erro, float multi[], int grau)
         }
 
         iteracao++;
+
+        ImprimirTabela(iteracao, a, b, m, fA, fB, fM, fAfM, fMfB);
     }
 }

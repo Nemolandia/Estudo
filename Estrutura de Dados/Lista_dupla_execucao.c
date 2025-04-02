@@ -7,12 +7,12 @@ RA: 190691*/
 #include <stdlib.h>
 
 // Aloca um novo nó
-No_lista* aloca()
+No_lista *aloca()
 {
     No_lista *novo;
     novo = (No_lista*)malloc(sizeof(No_lista));
 
-    if (!novo)
+    if (novo == NULL)
     {
         printf("Sem espaço de memória\n");
         exit(1);
@@ -58,7 +58,7 @@ void insere_fim(Lista *p_l, elem_t e)
     novo->info = e;
     novo->prox = NULL;
 
-    if (!*p_l)
+    if (*p_l == NULL)
     {
         novo->ant = NULL;
         *p_l = novo;
@@ -84,7 +84,7 @@ int insere_ordenado(Lista *p_l, elem_t e)
     aux = *p_l;
     novo->info = e;
 
-    if (!aux || aux->info >= e)
+    if (aux == NULL || aux->info >= e)
     {
         novo->prox = aux;
         novo->ant = NULL;
@@ -118,7 +118,7 @@ int ordenada(Lista *p_l)
 
     aux = *p_l;
 
-    while (aux && aux->prox)
+    while (aux != NULL && aux->prox != NULL)
     {
         if (aux->info > aux->prox->info)
         {
@@ -129,7 +129,7 @@ int ordenada(Lista *p_l)
     return 1;
 }//ordenada
 
-// Ordena a lista
+//Ordena a lista
 void ordena(Lista *p_l)
 {
     No_lista *i, *j;
@@ -149,12 +149,12 @@ void ordena(Lista *p_l)
     }
 }//ordena
 
-// Remove o primeiro elemento
+//Remove o primeiro elemento
 int remove_inicio(Lista *p_l, elem_t *p_e)
 {
     No_lista *aux;
 
-    if (!*p_l)
+    if (*p_l == NULL)
     {
         return 0;
     }
@@ -162,7 +162,7 @@ int remove_inicio(Lista *p_l, elem_t *p_e)
     *p_e = aux->info;
     *p_l = aux->prox;
 
-    if (*p_l)
+    if (*p_l != NULL)
     {
         (*p_l)->ant = NULL;
     }
@@ -175,19 +175,19 @@ int remove_fim(Lista *p_l, elem_t *p_e)
 {
     No_lista *aux;
 
-    if (!*p_l)
+    if (*p_l == NULL)
     {
         return 0;
     }
     aux = *p_l;
 
-    while (aux->prox)
+    while (aux->prox != NULL)
     {
         aux = aux->prox;
     }
     *p_e = aux->info;
 
-    if (aux->ant)
+    if (aux->ant != NULL)
     {
         aux->ant->prox = NULL;
     }
@@ -206,15 +206,15 @@ int remove_valor(Lista *p_l, elem_t e)
 
     aux = *p_l;
 
-    while (aux && aux->info != e)
+    while (aux != NULL && aux->info != e)
     {
         aux = aux->prox;
     }
-    if (!aux)
+    if (aux == NULL)
     {
         return 0;
     }
-    if (aux->ant)
+    if (aux->ant != NULL)
     {
         aux->ant->prox = aux->prox;
     }
@@ -222,7 +222,7 @@ int remove_valor(Lista *p_l, elem_t e)
     {
         *p_l = aux->prox;
     }
-    if (aux->prox)
+    if (aux->prox != NULL)
     {
         aux->prox->ant = aux->ant;
     }
@@ -233,17 +233,17 @@ int remove_valor(Lista *p_l, elem_t e)
 // Inverte a lista
 void inverte(Lista *p_l)
 {
-    No_lista *aux, *temp;
+    No_lista *aux, *aux2;
 
     aux = *p_l;
 
-    while (aux)
+    while (aux != NULL)
     {
-        temp = aux->prox;
+        aux2 = aux->prox;
         aux->prox = aux->ant;
-        aux->ant = temp;
+        aux->ant = aux2;
         *p_l = aux;
-        aux = temp;
+        aux = aux2;
     }
 }//inverte
 
@@ -252,7 +252,7 @@ void libera(Lista *p_l)
 {
     No_lista *aux;
 
-    while (*p_l)
+    while (*p_l != NULL)
     {
         aux = *p_l;
         *p_l = aux->prox;
@@ -266,7 +266,7 @@ void exibe(Lista *p_l)
     No_lista *aux;
 
     aux = *p_l;
-    while (aux)
+    while (aux != NULL)
     {
         printf("%d ", aux->info);
         aux = aux->prox;
