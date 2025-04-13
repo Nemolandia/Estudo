@@ -6,6 +6,8 @@ RA: 190691*/
 #include <stdlib.h>
 #include <math.h>
 
+float lagrange(float *x, float *fx, int n, float valorCalcular);
+
 int main()
 {
     int grau, i, pontos;

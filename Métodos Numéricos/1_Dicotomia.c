@@ -166,7 +166,6 @@ void dicotomia(float a, float b, float erro, float multi[], int grau)
         }
 
         iteracao++;
-
-        ImprimirTabela(iteracao, a, b, m, fA, fB, fM, fAfM, fMfB);
     }
+    ImprimirTabela(iteracao, a, b, m, fA, fB, fM, fAfM, fMfB);
 }

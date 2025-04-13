@@ -42,7 +42,7 @@ void insere_inicio(Lista *p_l, elem_t e)
     novo->prox = *p_l;
     novo->ant = NULL;
 
-    if (*p_l)
+    if (*p_l != NULL)
     {
         (*p_l)->ant = novo;
     }
@@ -66,7 +66,7 @@ void insere_fim(Lista *p_l, elem_t e)
     else
     {
         aux = *p_l;
-        while (aux->prox)
+        while (aux->prox != NULL)
         {
             aux = aux->prox;
         }
@@ -89,21 +89,21 @@ int insere_ordenado(Lista *p_l, elem_t e)
         novo->prox = aux;
         novo->ant = NULL;
 
-        if (aux)
+        if (aux != NULL)
         {
             aux->ant = novo;
         }
         *p_l = novo;
         return 1;
     }
-    while (aux->prox && aux->prox->info < e)
+    while (aux->prox != NULL && aux->prox->info < e)
     {
         aux = aux->prox;
     }
     novo->prox = aux->prox;
     novo->ant = aux;
 
-    if (aux->prox)
+    if (aux->prox != NULL)
     {
         aux->prox->ant = novo;
     }
