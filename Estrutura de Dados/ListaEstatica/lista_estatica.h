@@ -13,7 +13,7 @@ typedef struct l{
 /* Inicializa uma lista */
 void cria(Lista *p_l);
 
-/* Verifica se a lista est√° vazia ou nao */
+/* Verifica se a lista est· vazia ou nao */
 int vazia(Lista *p_l);
 
 /* Insere um elemento no inicio da lista */
@@ -42,7 +42,7 @@ int remove_inicio(Lista *p_l, elem_t *p_e);
 int remove_fim(Lista *p_l, elem_t *p_e);
 
 /* Remove o numero de valor e.
-   Retorna 0 caso este numero n√£o tenha sido encontrado */
+   Retorna 0 caso este numero n„o tenha sido encontrado */
 int remove_valor(Lista *p_l, elem_t e);
 
 /* Inverte os elementos de uma lista */

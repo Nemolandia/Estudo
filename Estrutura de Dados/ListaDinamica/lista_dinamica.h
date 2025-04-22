@@ -8,7 +8,7 @@ typedef struct no{
   struct no *prox;
 } No_lista;
 
-typedef No_lista *Lista;
+typedef No_lista * Lista;
 
 /* Inicializa uma lista */
 void cria(Lista *p_l);

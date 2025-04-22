@@ -1,10 +1,10 @@
-/*Execução da lista dinâmica para a materia de Estrutura de dados;
+/*Execução da lista dinâmica para AC2 de estoque de mercado;
 Autor: Jeovanni Conservani Silva;
 RA: 190691.*/
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Lista_dinamica.h"
+#include "EstoqueMercadoLista.h"
 
 No_lista *aloca_memoria()
 {
@@ -15,17 +15,17 @@ No_lista *aloca_memoria()
         exit(1);
     }
     return novo;
-}
+}//aloca
 
 void cria(Lista *p_l)
 {
     *p_l = NULL;
-}
+}//cria
 
 int vazia(Lista *p_l)
 {
     return (*p_l == NULL);
-}
+}//vazia
 
 void insere_inicio(Lista *p_l, elem_t e)
 {
@@ -33,7 +33,7 @@ void insere_inicio(Lista *p_l, elem_t e)
     novo->info = e; //Atribui o valor ao novo nó
     novo->prox = *p_l; //O novo nó aponta para o nó que antes estava no início
     *p_l = novo; //A lista agora começa no novo nó
-}
+}//insere_inicio
 
 void insere_fim(Lista *p_l, elem_t e)
 {
@@ -47,15 +47,15 @@ void insere_fim(Lista *p_l, elem_t e)
     } 
     else
     {
-        No_lista *temp = *p_l;
+        No_lista *aux = *p_l;
 
-        while (temp->prox != NULL)
+        while (aux->prox != NULL)
         {
-            temp = temp->prox; //Encontra o último nó
+            aux = aux->prox; //Encontra o último nó
         }
-        temp->prox = novo; //Aponta o último nó para o novo nó
+        aux->prox = novo; //Aponta o último nó para o novo nó
     }
-}
+}//insere_fim
 
 int insere_ordenado(Lista *p_l, elem_t e)
 {
@@ -71,23 +71,23 @@ int insere_ordenado(Lista *p_l, elem_t e)
     }
 
     // Caso o elemento deva ser inserido após algum nó
-    No_lista *temp = *p_l;
+    No_lista *aux = *p_l;
 
-    while (temp->prox != NULL && temp->prox->info < e)
+    while (aux->prox != NULL && aux->prox->info < e)
     {
-        temp = temp->prox; // Percorre a lista até encontrar a posição correta
+        aux = aux->prox; // Percorre a lista até encontrar a posição correta
     }
 
-    if (temp->prox != NULL && temp->prox->info == e)
+    if (aux->prox != NULL && aux->prox->info == e)
     {
         free(novo); // Se o elemento já existe, não insere e libera a memória
         return 0;
     }
 
-    novo->prox = temp->prox;
-    temp->prox = novo; // Insere o novo nó na posição correta
+    novo->prox = aux->prox;
+    aux->prox = novo; // Insere o novo nó na posição correta
     return 1;
-}
+}//insere_ordenado
 
 int ordenada(Lista *p_l)
 {
@@ -96,18 +96,18 @@ int ordenada(Lista *p_l)
         return 1; // Lista vazia ou com um único elemento está ordenada
     }
 
-    No_lista *temp = *p_l;
+    No_lista *aux = *p_l;
 
-    while (temp->prox != NULL)
+    while (aux->prox != NULL)
     {
-        if (temp->info > temp->prox->info)
+        if (aux->info > aux->prox->info)
         {
             return 0; // Se encontrar um par desordenado, retorna 0
         }
-        temp = temp->prox;
+        aux = aux->prox;
     }
     return 1; // Se percorreu toda a lista e não encontrou desordem, retorna 1
-}
+}//ordenada
 
 void ordena(Lista *p_l)
 {
@@ -117,7 +117,7 @@ void ordena(Lista *p_l)
     }
 
     No_lista *i, *j;
-    elem_t temp;
+    elem_t aux;
 
     for (i = *p_l; i != NULL; i = i->prox)
     {
@@ -126,13 +126,13 @@ void ordena(Lista *p_l)
             if (i->info > j->info)
             {
                 // Troca os valores de i e j
-                temp = i->info;
+                aux = i->info;
                 i->info = j->info;
-                j->info = temp;
+                j->info = aux;
             }
         }
     }
-}
+}//ordena
 
 int remove_inicio(Lista *p_l, elem_t *p_e)
 {
@@ -141,13 +141,13 @@ int remove_inicio(Lista *p_l, elem_t *p_e)
         return 0; // Se a lista estiver vazia, não há o que remover
     }
 
-    No_lista *temp = *p_l;
-    *p_e = temp->info; // Armazena o valor do elemento a ser removido
-    *p_l = temp->prox; // A lista agora começa no próximo nó
-    free(temp); // Libera a memória do nó removido
+    No_lista *aux = *p_l;
+    *p_e = aux->info; // Armazena o valor do elemento a ser removido
+    *p_l = aux->prox; // A lista agora começa no próximo nó
+    free(aux); // Libera a memória do nó removido
 
     return 1;
-}
+}//remove_inicio
 
 int remove_fim(Lista *p_l, elem_t *p_e)
 {
@@ -156,56 +156,56 @@ int remove_fim(Lista *p_l, elem_t *p_e)
         return 0; // Se a lista estiver vazia, não há o que remover
     }
 
-    No_lista *temp = *p_l;
+    No_lista *aux = *p_l;
 
-    if (temp->prox == NULL)
+    if (aux->prox == NULL)
     { // Se a lista tem apenas um elemento
-        *p_e = temp->info;
+        *p_e = aux->info;
         *p_l = NULL; // A lista ficará vazia
-        free(temp);
+        free(aux);
         return 1;
     }
 
     // Caso a lista tenha mais de um elemento
-    while (temp->prox->prox != NULL)
+    while (aux->prox->prox != NULL)
     {
-        temp = temp->prox; // Encontra o penúltimo nó
+        aux = aux->prox; // Encontra o penúltimo nó
     }
 
-    No_lista *ultimo = temp->prox;
+    No_lista *ultimo = aux->prox;
     *p_e = ultimo->info;
-    temp->prox = NULL; // O penúltimo nó agora será o último
+    aux->prox = NULL; // O penúltimo nó agora será o último
     free(ultimo); // Libera a memória do último nó
 
     return 1;
-}
+}//remove_fim
 
 int remove_valor(Lista *p_l, elem_t e)
 {
-    No_lista *temp = *p_l, *ant = NULL;
+    No_lista *aux = *p_l, *ant = NULL;
 
     // Percorre a lista até encontrar o valor
-    while (temp != NULL && temp->info != e)
+    while (aux != NULL && aux->info != e)
     {
-        ant = temp;
-        temp = temp->prox;
+        ant = aux;
+        aux = aux->prox;
     }
 
-    if (temp == NULL)
+    if (aux == NULL)
     {
         return 0; // Valor não encontrado
     }
 
     if (ant == NULL)
     { // Se for o primeiro nó
-        *p_l = temp->prox;
+        *p_l = aux->prox;
     } else { // Se for um nó intermediário ou final
-        ant->prox = temp->prox;
+        ant->prox = aux->prox;
     }
 
-    free(temp); // Libera a memória do nó removido
+    free(aux); // Libera a memória do nó removido
     return 1;
-}
+}//remove_valor
 
 void inverte(Lista *p_l)
 {
@@ -220,4 +220,50 @@ void inverte(Lista *p_l)
     }
 
     *p_l = ant; // O último nó se torna o primeiro da lista
-}
+}//inverte
+
+void salvar_em_arquivo(Lista *p_l, const char *nome_arquivo)
+{
+    FILE *arquivo = fopen(Lista_mercadoria, "w");
+
+    No_lista *aux = *p_l;
+
+    if (arquivo == NULL)
+    {
+        printf("ERRO - Arquivo inexistente\n");
+        return;
+    }
+
+    if (vazia(p_l))
+    {
+        printf("Lista vazia, nada a salvar.\n");
+        fclose(arquivo); // Fecha o arquivo se a lista estiver vazia
+        return; // Retorna para não tentar salvar uma lista vazia
+    }
+
+    while (aux != NULL)
+    {
+        fprintf(arquivo, "%i\n", aux->info); // Salva o valor do nó no arquivo
+        aux = aux->prox;
+    }
+    fclose(arquivo); // Fecha o arquivo após salvar os dados
+}//salvar_em_arquivo
+
+void carregar_do_arquivo(Lista *p_l, const char *nome_arquivo)
+{
+    FILE *arquivo = fopen(Lista_mercadoria, "r");
+
+    elem_t item;
+
+    if (arquivo == NULL)
+    {
+        printf"ERRO - Arquivo inexistente\n");
+        return; // Retorna se o arquivo não puder ser aberto
+    }
+
+    while (fscanf(arquivo, "%i", &item) == 1)
+    {
+        insere_fim (p_l, item); // Insere o item no final da lista
+    }
+    fclose(arquivo); // Fecha o arquivo após carregar os dados
+}//carregar_do_arquivo

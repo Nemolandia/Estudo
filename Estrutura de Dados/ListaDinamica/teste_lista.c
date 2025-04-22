@@ -3,7 +3,7 @@
  */
 
 #include<stdio.h>
-#include "Lista_dupla_execucao.c"
+#include "lista_dinamica.h"
 
 int main(){
   int num, opcao;
@@ -13,6 +13,7 @@ int main(){
   
   opcao = 1;  
   while(opcao <= 10 && opcao > 0){
+    
     printf("\n 1 - insere um numero no inicio da lista");
     printf("\n 2 - insere um numero no fim da lista");
     printf("\n 3 - insere um numero de maneira ordenada");
@@ -25,21 +26,22 @@ int main(){
     printf("\n 10 - exibe a lista");
     printf("\n qualquer outro numero para sair");
     printf("\n\nEntre com uma das opcoes acima: ");
+    
     scanf("%d", &opcao);
     
     switch (opcao){
     case 1:
-      printf("\n\nEntre com o numero a ser inserido: ");
+      //printf("\n\nEntre com o numero a ser inserido: ");
       scanf("%d", &num);
       insere_inicio(&l, num);
       break;
     case 2:
-      printf("\n\nEntre com o numero a ser inserido: ");
+      //printf("\n\nEntre com o numero a ser inserido: ");
       scanf("%d", &num);
       insere_fim(&l, num);
       break;
     case 3:
-      printf("\n\nEntre com o numero a ser inserido: ");
+      //printf("\n\nEntre com o numero a ser inserido: ");
       scanf("%d", &num);
       if (!ordenada(&l))
 	ordena(&l);
@@ -47,31 +49,31 @@ int main(){
       break;
     case 4: 
       if (ordenada(&l))
-	printf("\nlista ordenada");
+	       printf("\nlista ordenada");
       else 
-	printf("\nlista NAO ordenada");
+	       printf("\nlista NAO ordenada");
       break;
     case 5: 
       if (!ordenada(&l))
-	ordena(&l);
+	       ordena(&l);
       break;
     case 6:
       if (remove_inicio(&l, &num))
-	printf("\nNumero removido: %d", num);
+	       printf("\nNumero removido: %d\n", num);
       else
-	printf("\nLista vazia");
+	       printf("\nLista vazia");
       break;
     case 7:
       if (remove_fim(&l, &num))
-	printf("\nNumero removido: %d", num);
+	       printf("\nNumero removido: %d\n", num);
       else
-	printf("\nLista vazia");
+	       printf("\nLista vazia");
       break;
     case 8:
-      printf("\n\nEntre com o numero a ser removido: ");
+      //printf("\n\nEntre com o numero a ser removido: ");
       scanf("%d", &num);
       if (!remove_valor(&l, num))
-	printf("Numero nao encontrado");
+	       printf("Numero nao encontrado");
       break;      
     case 9:
       inverte(&l);
