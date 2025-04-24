@@ -1,20 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoLista.h"
+#include "EstoqueMercadoLista.c"
 
 int main()
 {
-    // Variáveis para os itens
     Item *listaItens;
     int quantidadeLida;
 
-    // Criar os itens automaticamente, se o arquivo não existir
     criarListaItensSeNaoExistir();
+    listaItens = carregarItensDaLista(&quantidadeLida);
 
-    // Carregar itens do arquivo ListaItens
-    carregarItensDaLista(&listaItens, &quantidadeLida);
-
-    // Verificar se algum item foi carregado
     if (quantidadeLida == 0)
     {
         printf("Nenhum item foi carregado da ListaItens.\n");
@@ -22,35 +17,28 @@ int main()
     else
     {
         printf("Itens carregados: %d\n", quantidadeLida);
-        
-        // Organizar os itens por vencimento e gravá-los nos arquivos correspondentes
-        organizarEGravarItens(listaItens, quantidadeLida);
+        organizarEGravarItens(listaItens);
     }//else
 
-    // Mostrar o conteúdo dos arquivos
-    mostrarArquivo("ListaFrutas");
-    mostrarArquivo("ListaBebidas");
-    mostrarArquivo("ListaDoces");
-    mostrarArquivo("ListaSalgados");
-    mostrarArquivo("ListaEnlatados");
+    // Mostrar e remover itens vencidos
+    const char *arquivos[5] =
+    {
+        "ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados"
+    };
 
-    // Remover itens vencidos de todos os arquivos
-    removerItensVencidos("ListaFrutas");
-    removerItensVencidos("ListaBebidas");
-    removerItensVencidos("ListaDoces");
-    removerItensVencidos("ListaSalgados");
-    removerItensVencidos("ListaEnlatados");
+    for (int i = 0; i < 5; i++)
+    {
+        mostrarArquivo(arquivos[i]);
+        removerItensVencidos(arquivos[i]);
+    }//for
 
-    // Mostrar o conteúdo após a remoção de itens vencidos
-    printf("\nApós a remoção de itens vencidos:\n");
-    mostrarArquivo("ListaFrutas");
-    mostrarArquivo("ListaBebidas");
-    mostrarArquivo("ListaDoces");
-    mostrarArquivo("ListaSalgados");
-    mostrarArquivo("ListaEnlatados");
+    printf("\nApos remocao dos itens vencidos:\n");
 
-    // Liberar memória alocada
-    free(listaItens);
+    for (int i = 0; i < 5; i++)
+    {
+        mostrarArquivo(arquivos[i]);
+    }//for
 
+    liberarLista(listaItens);
     return 0;
 }//main

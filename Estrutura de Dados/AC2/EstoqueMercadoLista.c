@@ -4,27 +4,41 @@
 #include <string.h>
 #include <time.h>
 
-// Função para alocar memória para um vetor de itens
-Item* alocarItens(int quantidade)
+// Aloca memória para um novo item
+Item* alocarItem()
 {
-    Item *itens = (Item*) malloc(sizeof(Item) * quantidade);
-    
-    if (itens == NULL)
-    {
-        printf("Erro: Falha ao alocar memoria para %d itens.\n", quantidade);
-        exit(1); // Saída forçada caso não seja possível alocar memória
-    }//if
-    
-    return itens;
-}//alocarItens
+    Item *novoItem = (Item*) malloc(sizeof(Item));
 
-// Função de comparação para ordenar itens por vencimento (menor para maior)
+    if (novoItem == NULL)
+    {
+        printf("Erro: falha ao alocar memoria para item.\n");
+        exit(1);
+    }//if
+    novoItem->prox = NULL;
+    return novoItem;
+}//alocarItem
+
+// Libera toda a lista
+void liberarLista(Item *lista)
+{
+    Item *atual = lista;
+    Item *proxItem;
+
+    while (atual != NULL)
+    {
+        proxItem = atual->prox;
+        free(atual);
+        atual = proxItem;
+    }//while
+}//liberarLista
+
+// Compara por vencimento (usado no qsort se necessário)
 int compararPorVencimento(const void *a, const void *b)
 {
     return ((Item *)a)->vencimento - ((Item *)b)->vencimento;
-}//compararPorVencimento
+}// compararPorVencimento
 
-// Função para contar quantos itens tem em um arquivo
+// Conta itens num arquivo binário
 int contarItensNoArquivo(const char *nomeArquivo)
 {
     FILE *arquivo = fopen(nomeArquivo, "rb");
@@ -43,157 +57,158 @@ int contarItensNoArquivo(const char *nomeArquivo)
 
     fclose(arquivo);
     return contador;
-}//contarItensNoArquivo
+}// contarItensNoArquivo
 
-// Função para remover itens vencidos (vencimento == 0)
+// Remove itens com vencimento 0
 void removerItensVencidos(const char *nomeArquivo)
 {
     FILE *arquivoOriginal = fopen(nomeArquivo, "rb");
     FILE *arquivoTemp = fopen("temp.bin", "wb");
-    Item itemAtual;
+    Item item;
 
     if (arquivoOriginal == NULL || arquivoTemp == NULL)
     {
+        printf("Erro ao abrir arquivos para remover vencidos.\n");
         return;
     }//if
 
-    while (fread(&itemAtual, sizeof(Item), 1, arquivoOriginal) == 1)
+    while (fread(&item, sizeof(Item), 1, arquivoOriginal) == 1)
     {
-        if (itemAtual.vencimento > 0)
+        if (item.vencimento > 0)
         {
-            fwrite(&itemAtual, sizeof(Item), 1, arquivoTemp);
+            fwrite(&item, sizeof(Item), 1, arquivoTemp);
         }//if
     }//while
 
     fclose(arquivoOriginal);
     fclose(arquivoTemp);
-
     remove(nomeArquivo);
     rename("temp.bin", nomeArquivo);
-}//removerItensVencidos
+}// removerItensVencidos
 
-// Função para mostrar o conteúdo de um arquivo
-void mostrarArquivo(const char *nomeArquivo)
-{
+// Mostra conteúdo de um arquivo
+void mostrarArquivo(const char *nomeArquivo) {
     FILE *arquivo = fopen(nomeArquivo, "rb");
     Item item;
 
-    if (arquivo == NULL)
-    {
+    if (arquivo == NULL) {
         printf("Arquivo %s nao encontrado.\n", nomeArquivo);
         return;
-    }//if
+    }
 
     printf("Conteudo do arquivo %s:\n", nomeArquivo);
-
-    while (fread(&item, sizeof(Item), 1, arquivo) == 1)
-    {
+    while (fread(&item, sizeof(Item), 1, arquivo) == 1) {
         printf("Nome: %s | Tipo: %s | Vencimento: %d | Setor: %s\n",
                item.nome, item.tipo, item.vencimento, item.setor);
-    }//while
-    fclose(arquivo);
-}//mostrarArquivo
+    }
 
-// Função para carregar os itens da ListaItens
-void carregarItensDaLista(Item **listaItens, int *quantidadeLida)
-{
+    fclose(arquivo);
+}
+
+// Carrega itens da ListaItens para uma lista dinâmica
+Item* carregarItensDaLista(int *quantidadeLida) {
     FILE *arquivo = fopen("ListaItens", "rb");
+    Item *inicio = NULL;
+    Item *fim = NULL;
+    Item temp;
+    *quantidadeLida = 0;
 
-    if (arquivo == NULL)
-    {
-        *listaItens = NULL;
-        *quantidadeLida = 0;
-        return;
-    }//if
+    if (arquivo == NULL) {
+        return NULL;
+    }
 
-    *listaItens = alocarItens(MAX_ITENS_INSERIR);
+    while (fread(&temp, sizeof(Item), 1, arquivo) == 1 && *quantidadeLida < MAX_ITENS_INSERIR) {
+        Item *novo = alocarItem();
+        *novo = temp;
+        novo->prox = NULL;
 
-    *quantidadeLida = fread(*listaItens, sizeof(Item), MAX_ITENS_INSERIR, arquivo);
+        if (inicio == NULL) {
+            inicio = novo;
+        } else {
+            fim->prox = novo;
+        }
+
+        fim = novo;
+        (*quantidadeLida)++;
+    }
 
     fclose(arquivo);
-}//carregarItensDaLista
+    return inicio;
+}
 
-// Função para organizar e gravar os itens no arquivo correto de acordo com o tipo
-void organizarEGravarItens(Item *listaItens, int quantidadeLida)
-{
-    int indiceItem;
-    int quantidadeAtualNoArquivo;
-    FILE *arquivoDestino;
-    const char *nomeArquivos[5] = {"ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados"};
-    const char *nomeArquivoDestino;
+// Organiza e grava itens por tipo
+void organizarEGravarItens(Item *listaItens) {
+    Item *atual = listaItens;
+    FILE *arquivo;
+    const char *nomesArquivos[5] = {
+        "ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados"
+    };
 
-    qsort(listaItens, quantidadeLida, sizeof(Item), compararPorVencimento);
-
-    for (indiceItem = 0; indiceItem < quantidadeLida; indiceItem++)
+    while (atual != NULL)
     {
-        if (listaItens[indiceItem].vencimento == 0)
+        if (atual->vencimento == 0)
         {
+            atual = atual->prox;
             continue;
         }//if
 
-        nomeArquivoDestino = NULL;
-        if (strcmp(listaItens[indiceItem].tipo, "fruta") == 0)
+        const char *nomeArquivo = NULL;
+
+        if (strcmp(atual->tipo, "fruta") == 0)
         {
-            nomeArquivoDestino = nomeArquivos[0];
+            nomeArquivo = nomesArquivos[0];
         }//if
-        else if (strcmp(listaItens[indiceItem].tipo, "bebida") == 0)
+        else if (strcmp(atual->tipo, "bebida") == 0)
         {
-            nomeArquivoDestino = nomeArquivos[1];
+             nomeArquivo = nomesArquivos[1];
         }//else if
-        else if (strcmp(listaItens[indiceItem].tipo, "doce") == 0)
+        else if (strcmp(atual->tipo, "doce") == 0)
         {
-            nomeArquivoDestino = nomeArquivos[2];
+            nomeArquivo = nomesArquivos[2];
         }//else if
-        else if (strcmp(listaItens[indiceItem].tipo, "salgado") == 0)
+        else if (strcmp(atual->tipo, "salgado") == 0)
         {
-            nomeArquivoDestino = nomeArquivos[3];
+            nomeArquivo = nomesArquivos[3];
         }//else if
-        else if (strcmp(listaItens[indiceItem].tipo, "enlatado") == 0)
+        else if (strcmp(atual->tipo, "enlatado") == 0)
         {
-            nomeArquivoDestino = nomeArquivos[4];
+            nomeArquivo = nomesArquivos[4];
         }//else if
 
-        if (nomeArquivoDestino == NULL)
+        if (nomeArquivo != NULL)
         {
-            continue; // Se não encontrar o tipo correto, passa para o próximo item
+            int quantidadeAtual = contarItensNoArquivo(nomeArquivo);
+
+            if (quantidadeAtual >= MAX_ESTOQUE)
+            {
+                printf("Estoque cheio para %s. Item %s nao adicionado.\n", atual->tipo, atual->nome);
+            }//if
+            else
+            {
+                arquivo = fopen(nomeArquivo, "ab");
+                if (arquivo != NULL)
+                {
+                    fwrite(atual, sizeof(Item), 1, arquivo);
+                    fclose(arquivo);
+                }//if
+                else
+                {
+                    printf("Erro ao abrir arquivo %s.\n", nomeArquivo);
+                }//else
+            }//else
         }//if
 
-        quantidadeAtualNoArquivo = contarItensNoArquivo(nomeArquivoDestino);
+        atual = atual->prox;
+    }//while
+}// organizarEGravarItens
 
-        if (quantidadeAtualNoArquivo >= MAX_ESTOQUE)
-        {
-            printf("Estoque cheio para tipo %s (%s). Não há espaço para mais itens.\n", listaItens[indiceItem].tipo, nomeArquivoDestino);
-            continue;
-        }//if
-
-        arquivoDestino = fopen(nomeArquivoDestino, "ab");
-
-        if (arquivoDestino == NULL)
-        {
-            printf("Erro ao abrir o arquivo %s para escrita.\n", nomeArquivoDestino);
-            continue;
-        }//if
-
-        if (fwrite(&listaItens[indiceItem], sizeof(Item), 1, arquivoDestino) != 1)
-        {
-            printf("Erro ao gravar item no arquivo %s.\n", nomeArquivoDestino);
-            fclose(arquivoDestino);
-            continue;
-        }//if
-
-        fclose(arquivoDestino);
-    }//for
-}//organizarEGravarItens
-
-// Função para criar a lista de itens automaticamente caso nao exista
+// Cria a ListaItens automaticamente se não existir
 void criarListaItensSeNaoExistir()
 {
-    FILE *arquivo;
+    FILE *arquivo = fopen("ListaItens", "rb");
+    Item item;
     int i;
-    Item novoItem;
 
-    arquivo = fopen("ListaItens", "rb");
-    
     if (arquivo != NULL)
     {
         fclose(arquivo);
@@ -210,35 +225,17 @@ void criarListaItensSeNaoExistir()
 
     srand(time(NULL));
 
-    // Gerando itens com nomes aleatórios e vencimentos entre 1 e 30 dias
     for (i = 0; i < MAX_ITENS_INSERIR; i++)
     {
-        int tipo = i % 5;
+        int tipoIndex = i % 5;
+        const char *tipos[5] = {"fruta", "bebida", "doce", "salgado", "enlatado"};
 
-        switch (tipo)
-        {
-            case 0:
-                strcpy(novoItem.tipo, "fruta");
-                break;
-            case 1:
-                strcpy(novoItem.tipo, "bebida");
-                break;
-            case 2:
-                strcpy(novoItem.tipo, "doce");
-                break;
-            case 3:
-                strcpy(novoItem.tipo, "salgado");
-                break;
-            case 4:
-                strcpy(novoItem.tipo, "enlatado");
-                break;
-        }//switch
-        
-        sprintf(novoItem.nome, "Item_%d_%d", tipo, i + 1); // Nome aleatório no formato Item_tipo_indice
-        novoItem.vencimento = (i % 10 == 0) ? 0 : (1 + rand() % 30);  // Vencimento entre 1 e 30 dias, com alguns itens vencendo
-        sprintf(novoItem.setor, "Setor %c", 'A' + tipo);  // Setor baseado no tipo
+        strcpy(item.tipo, tipos[tipoIndex]);
+        sprintf(item.nome, "Item_%d", i + 1);
+        item.vencimento = (i % 10 == 0) ? 0 : (1 + rand() % 30);
+        sprintf(item.setor, "Setor %c", 'A' + tipoIndex);
 
-        fwrite(&novoItem, sizeof(Item), 1, arquivo);
+        fwrite(&item, sizeof(Item), 1, arquivo);
     }//for
 
     fclose(arquivo);
