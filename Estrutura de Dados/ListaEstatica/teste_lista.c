@@ -1,9 +1,9 @@
 /*
- * Programa para testar as operações de lista
+ * Programa para testar as operaï¿½ï¿½es de lista
  */
 
 #include<stdio.h>
-#include "lista_estatica.h"
+#include "lista_estatica.c"
 
 int main(){
   int num, opcao;
@@ -17,7 +17,7 @@ int main(){
     printf("\n 1 - insere um numero no inicio da lista");
     printf("\n 2 - insere um numero no fim da lista");
     printf("\n 3 - insere um numero de maneira ordenada");
-    printf("\n 4 - verifica se a lista está ordenada");
+    printf("\n 4 - verifica se a lista estï¿½ ordenada");
     printf("\n 5 - ordena a lista");
     printf("\n 6 - remove o elemento que esta no inicio da lista");
     printf("\n 7 - remove o elemento que esta no fim da lista");

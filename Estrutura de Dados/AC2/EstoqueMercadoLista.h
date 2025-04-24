@@ -1,61 +1,40 @@
-/*
- * Esqueleto para a implementação de listas.
- */
+#ifndef MERCADO_H
+#define MERCADO_H
 
- typedef int elem_t;
- typedef struct no{
-   elem_t info;
-   struct no *prox;
- } No_lista;
- 
- typedef No_lista *Lista;
- 
- /* Inicializa uma lista */
- void cria(Lista *p_l);
- 
- /* Verifica se a lista está vazia ou não */
- int vazia(Lista *p_l);
- 
- /* Insere um elemento no início da lista */
- void insere_inicio(Lista *p_l, elem_t e);
- 
- /* Insere um elemento no final da lista */
- void insere_fim(Lista *p_l, elem_t e);
- 
- /* Insere um elemento na lista de maneira ordenada.
-    Retorna 0 caso o elemento já exista na lista. 
-    Assume que a lista está ordenada */
- int insere_ordenado(Lista *p_l, elem_t e);
- 
- /* Verifica se a lista está ordenada */
- int ordenada(Lista *p_l);
- 
- /* Ordena a lista */
- void ordena(Lista *p_l);
- 
- /* Remove o elemento que está no início da lista.
-    Retorna 0 caso a lista esteja vazia */
- int remove_inicio(Lista *p_l, elem_t *p_e);
- 
- /* Remove o elemento que está no final da lista.
-    Retorna 0 caso a lista esteja vazia */
- int remove_fim(Lista *p_l, elem_t *p_e);
- 
- /* Remove o nó de valor e.
-    Retorna 0 caso este nó não tenha sido encontrado */
- int remove_valor(Lista *p_l, elem_t e);
- 
- /* Inverte os elementos de uma lista */
- void inverte(Lista *p_l);
- 
- /* Remove todos os nós da lista */
- void libera(Lista *p_l);
- 
- /* Exibe o conteúdo da lista */
- void exibe(Lista *p_l);
+#define MAX_ITENS_INSERIR 500       // Quantidade de itens a serem inseridos por vez
+#define MAX_ESTOQUE 450             // Quantidade máxima de itens em cada arquivo de estoque
 
- /* Salva os dados da lista em um arquivo */
-void salvar_em_arquivo(Lista *p_l, const char *nome_arquivo);
+// Estrutura que representa um item no mercado
+typedef struct
+{
+    char nome[50];       // Nome do item
+    char tipo[20];       // Tipo do item (fruta, bebida, doce, salgado, enlatado)
+    int vencimento;      // Vencimento em dias (0 = vencido)
+    char setor[10];      // Setor onde o item estará (Setor A, Setor B, etc.)
+} Item;
 
-/* Carrega os dados de um arquivo para a lista */
-void carregar_do_arquivo(Lista *p_l, const char *nome_arquivo);
+// Função para alocar memória para os itens
+Item* alocarItens(int quantidade);
+
+// Função para comparar itens por vencimento (ordem crescente)
+int compararPorVencimento(const void *a, const void *b);
+
+// Função para contar quantos itens há em um arquivo
+int contarItensNoArquivo(const char *nomeArquivo);
+
+// Função para remover itens vencidos de um arquivo
+void removerItensVencidos(const char *nomeArquivo);
+
+// Função para mostrar o conteúdo de um arquivo
+void mostrarArquivo(const char *nomeArquivo);
+
+// Função para carregar os itens do arquivo ListaItens
+void carregarItensDaLista(Item **listaItens, int *quantidadeLida);
+
+// Função para organizar os itens e gravá-los nos arquivos correspondentes
+void organizarEGravarItens(Item *listaItens, int quantidadeLida);
+
+// Função para criar a lista de itens automaticamente, se o arquivo não existir
+void criarListaItensSeNaoExistir();
+
+#endif // MERCADO_H
