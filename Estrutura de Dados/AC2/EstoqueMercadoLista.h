@@ -2,7 +2,7 @@
 #define MERCADO_H
 
 #define MAX_ITENS_INSERIR 500       // Quantidade de itens a serem inseridos por vez
-#define MAX_ESTOQUE 450             // Quantidade máxima de itens em cada arquivo de estoque
+#define MAX_ESTOQUE 500             // Quantidade máxima de itens em cada arquivo de estoque
 
 // Estrutura que representa um item no mercado
 typedef struct Item

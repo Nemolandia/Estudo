@@ -1,8 +1,8 @@
 #ifndef MERCADO_ARVORE_H
 #define MERCADO_ARVORE_H
 
-#define MAX_ITENS_INSERIR 500
-#define MAX_ESTOQUE 450
+#define MAX_ITENS_INSERIR 3000
+#define MAX_ESTOQUE 2500
 
 typedef struct Item {
     char nome[50];

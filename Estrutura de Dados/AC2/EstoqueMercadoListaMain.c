@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoLista.c"
+#include "EstoqueMercadoLista.h"
 
 int main()
 {

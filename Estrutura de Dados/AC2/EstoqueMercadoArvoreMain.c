@@ -20,7 +20,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoArvore.c"
+#include "EstoqueMercadoArvore.h"
 
 int main() {
     Arvore estoque;
