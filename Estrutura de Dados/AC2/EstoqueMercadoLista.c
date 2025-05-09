@@ -62,28 +62,28 @@ int contarItensNoArquivo(const char *nomeArquivo)
 // Remove itens com vencimento 0
 void removerItensVencidos(const char *nomeArquivo)
 {
-    FILE *arquivoOriginal = fopen(nomeArquivo, "rb");
-    FILE *arquivoTemp = fopen("temp.bin", "wb");
+    FILE *arquivoOriginal = fopen(nomeArquivo, "r");
+    FILE *arquivoTemp = fopen("temp.txt", "w");
     Item item;
 
     if (arquivoOriginal == NULL || arquivoTemp == NULL)
     {
         printf("Erro ao abrir arquivos para remover vencidos.\n");
         return;
-    }//if
+    }
 
-    while (fread(&item, sizeof(Item), 1, arquivoOriginal) == 1)
+    while (fscanf(arquivoOriginal, "%49[^;];%19[^;];%d;%9[^\n]\n", item.nome, item.tipo, &item.vencimento, item.setor) == 4)
     {
         if (item.vencimento > 0)
         {
-            fwrite(&item, sizeof(Item), 1, arquivoTemp);
-        }//if
-    }//while
+            fprintf(arquivoTemp, "%s;%s;%d;%s\n", item.nome, item.tipo, item.vencimento, item.setor);
+        }
+    }
 
     fclose(arquivoOriginal);
     fclose(arquivoTemp);
     remove(nomeArquivo);
-    rename("temp.bin", nomeArquivo);
+    rename("temp.txt", nomeArquivo);
 }// removerItensVencidos
 
 // Mostra conteúdo de um arquivo
@@ -97,7 +97,7 @@ void mostrarArquivo(const char *nomeArquivo) {
     }
 
     printf("Conteudo do arquivo %s:\n", nomeArquivo);
-    while (fread(&item, sizeof(Item), 1, arquivo) == 1) {
+    while (fscanf(arquivo, "%49[^;];%19[^;];%d;%9[^\n]\n", item.nome, item.tipo, &item.vencimento, item.setor) == 4) {
         printf("Nome: %s | Tipo: %s | Vencimento: %d | Setor: %s\n",
                item.nome, item.tipo, item.vencimento, item.setor);
     }
@@ -141,7 +141,7 @@ void organizarEGravarItens(Item *listaItens) {
     Item *atual = listaItens;
     FILE *arquivo;
     const char *nomesArquivos[5] = {
-        "ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados"
+        "ListaFrutasLista", "ListaBebidasLista", "ListaDocesLista", "ListaSalgadosLista", "ListaEnlatadosLista"
     };
 
     while (atual != NULL)
@@ -185,10 +185,10 @@ void organizarEGravarItens(Item *listaItens) {
             }//if
             else
             {
-                arquivo = fopen(nomeArquivo, "ab");
+                arquivo = fopen(nomeArquivo, "a");
                 if (arquivo != NULL)
                 {
-                    fwrite(atual, sizeof(Item), 1, arquivo);
+                    fprintf(arquivo, "%s;%s;%d;%s\n", atual->nome, atual->tipo, atual->vencimento, atual->setor);
                     fclose(arquivo);
                 }//if
                 else
@@ -207,13 +207,12 @@ void criarListaItensSeNaoExistir()
 {
     FILE *arquivo = fopen("ListaItens", "rb");
     Item item;
-    int i;
 
     if (arquivo != NULL)
     {
         fclose(arquivo);
         return;
-    }//if
+    }
 
     arquivo = fopen("ListaItens", "wb");
 
@@ -221,22 +220,25 @@ void criarListaItensSeNaoExistir()
     {
         printf("Erro ao criar ListaItens.\n");
         return;
-    }//if
+    }
 
     srand(time(NULL));
 
-    for (i = 0; i < MAX_ITENS_INSERIR; i++)
+    const char *tipos[5] = {"fruta", "bebida", "doce", "salgado", "enlatado"};
+    int contadores[5] = {0};  // contador para cada tipo
+
+    for (int i = 0; i < MAX_ITENS_INSERIR; i++)
     {
         int tipoIndex = i % 5;
-        const char *tipos[5] = {"fruta", "bebida", "doce", "salgado", "enlatado"};
+        contadores[tipoIndex]++; // incrementa o contador daquele tipo
 
         strcpy(item.tipo, tipos[tipoIndex]);
-        sprintf(item.nome, "Item_%d", i + 1);
+        sprintf(item.nome, "%s_%d", tipos[tipoIndex], contadores[tipoIndex]);  // nome específico por tipo
         item.vencimento = (i % 10 == 0) ? 0 : (1 + rand() % 30);
         sprintf(item.setor, "Setor %c", 'A' + tipoIndex);
 
         fwrite(&item, sizeof(Item), 1, arquivo);
-    }//for
+    }
 
     fclose(arquivo);
 }//criarListaItensSeNaoExistir

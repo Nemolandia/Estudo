@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoLista.h"
+#include "EstoqueMercadoLista.c"
 
 int main()
 {
@@ -23,7 +23,7 @@ int main()
     // Mostrar e remover itens vencidos
     const char *arquivos[5] =
     {
-        "ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados"
+        "ListaFrutasLista", "ListaBebidasLista", "ListaDocesLista", "ListaSalgadosLista", "ListaEnlatadosLista"
     };
 
     for (int i = 0; i < 5; i++)
