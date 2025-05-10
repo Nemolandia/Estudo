@@ -11,7 +11,6 @@ int main() {
 
     // Carrega os itens da lista para a árvore
     estoque = carregarItensEmArvore(&quantidadeLida);
-
     if (quantidadeLida == 0) {
         printf("Nenhum item foi carregado da ListaItens.\n");
         return 1;
@@ -34,23 +33,16 @@ int main() {
         "ListaEnlatadosArvore"
     };
 
-    // Mostra o conteúdo dos arquivos antes da remoção de vencidos
-    printf("\n--- Arquivos Antes da Remoção de Vencidos ---\n");
-    for (int i = 0; i < 5; i++) {
-        printf("\nArquivo: %s\n", arquivos[i]);
-        mostrarArquivoBinario(arquivos[i]);
-    }
-
     // Remove itens vencidos
     for (int i = 0; i < 5; i++) {
         removerItensVencidosArvore(arquivos[i]);
     }
 
-    // Mostra novamente os arquivos após remoção de vencidos
-    printf("\n--- Arquivos Após a Remoção de Vencidos ---\n");
+    // Mostra o conteúdo de cada arquivo
+    printf("\n--- Conteúdo dos Arquivos ---\n");
     for (int i = 0; i < 5; i++) {
-        printf("\nArquivo: %s\n", arquivos[i]);
-        mostrarArquivoBinario(arquivos[i]);
+        printf("\nConteúdo de %s:\n", arquivos[i]);
+        mostrarConteudoArquivo(arquivos[i]);
     }
 
     liberarArvore(estoque);

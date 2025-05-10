@@ -29,8 +29,6 @@ void removerItensVencidosArvore(const char *nomeArquivo);
 int contarItensNoArquivo(const char *nomeArquivo);
 Arvore carregarItensEmArvore(int *quantidadeLida);
 void criarListaItensSeNaoExistir();
-void mostrarArquivoBinario(const char *nomeArquivo);
-
-int contarNos(Arvore raiz);
+void mostrarConteudoArquivo(const char *nomeArquivo); // Nova função
 
 #endif

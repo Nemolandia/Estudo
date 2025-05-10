@@ -41,7 +41,7 @@ void inserirItem(Arvore *raiz, Item item) {
 void mostrarArvore(Arvore raiz) {
     if (raiz != NULL) {
         mostrarArvore(raiz->esq);
-        printf("Nome: %s | Tipo: %s | Vencimento: %d | Setor: %s\n",
+        printf("Nome: %s \n Tipo: %s \n Vencimento: %d \n Setor: %s\n",
                raiz->item.nome, raiz->item.tipo, raiz->item.vencimento, raiz->item.setor);
         mostrarArvore(raiz->dir);
     }
@@ -51,36 +51,29 @@ void organizarEGravarArvore(Arvore raiz) {
     const char *nomesArquivos[5] = {
         "ListaFrutasArvore", "ListaBebidasArvore", "ListaDocesArvore", "ListaSalgadosArvore", "ListaEnlatadosArvore"
     };
-
     if (raiz == NULL)
         return;
-
     organizarEGravarArvore(raiz->esq);
-
     if (raiz->item.vencimento > 0) {
         const char *nomeArquivo = NULL;
-
         if (strcmp(raiz->item.tipo, "fruta") == 0) nomeArquivo = nomesArquivos[0];
         else if (strcmp(raiz->item.tipo, "bebida") == 0) nomeArquivo = nomesArquivos[1];
         else if (strcmp(raiz->item.tipo, "doce") == 0) nomeArquivo = nomesArquivos[2];
         else if (strcmp(raiz->item.tipo, "salgado") == 0) nomeArquivo = nomesArquivos[3];
         else if (strcmp(raiz->item.tipo, "enlatado") == 0) nomeArquivo = nomesArquivos[4];
-
         if (nomeArquivo != NULL) {
-            FILE *arquivo = fopen(nomeArquivo, "a");  // Modo de texto para anexar
-
+            FILE *arquivo = fopen(nomeArquivo, "a"); // Modo de texto para anexar
             if (arquivo == NULL) {
                 printf("Erro ao abrir o arquivo %s para gravacao.\n", nomeArquivo);
             } else {
                 // Gravando os dados no formato legível como texto
-                fprintf(arquivo, "Nome: %s | Tipo: %s | Vencimento: %d | Setor: %s\n",
+                fprintf(arquivo, "Nome: %s \n Tipo: %s \n Vencimento: %d \n Setor: %s\n",
                         raiz->item.nome, raiz->item.tipo, raiz->item.vencimento, raiz->item.setor);
                 fclose(arquivo);
                 printf("Gravado: %s em %s\n", raiz->item.nome, nomeArquivo);
             }
         }
     }
-
     organizarEGravarArvore(raiz->dir);
 }
 
@@ -88,18 +81,15 @@ void removerItensVencidosArvore(const char *nomeArquivo) {
     FILE *arquivoOriginal = fopen(nomeArquivo, "rb");
     FILE *arquivoTemp = fopen("temp", "wb");
     Item item;
-
     if (arquivoOriginal == NULL || arquivoTemp == NULL) {
         printf("Erro ao abrir arquivos para remocao.\n");
         return;
     }
-
     while (fread(&item, sizeof(Item), 1, arquivoOriginal) == 1) {
         if (item.vencimento > 0) {
             fwrite(&item, sizeof(Item), 1, arquivoTemp);
         }
     }
-
     fclose(arquivoOriginal);
     fclose(arquivoTemp);
     remove(nomeArquivo);
@@ -109,7 +99,6 @@ void removerItensVencidosArvore(const char *nomeArquivo) {
 int contarItensNoArquivo(const char *nomeArquivo) {
     FILE *arquivo = fopen(nomeArquivo, "rb");
     if (arquivo == NULL) return 0;
-
     int contador = 0;
     Item item;
     while (fread(&item, sizeof(Item), 1, arquivo) == 1) {
@@ -122,16 +111,13 @@ int contarItensNoArquivo(const char *nomeArquivo) {
 Arvore carregarItensEmArvore(int *quantidadeLida) {
     FILE *arquivo = fopen("ListaItens", "rb");
     if (arquivo == NULL) return NULL;
-
     Arvore raiz = NULL;
     Item item;
     *quantidadeLida = 0;
-
     while (fread(&item, sizeof(Item), 1, arquivo) == 1 && *quantidadeLida < MAX_ITENS_INSERIR) {
         inserirItem(&raiz, item);
         (*quantidadeLida)++;
     }
-
     fclose(arquivo);
     return raiz;
 }
@@ -142,17 +128,14 @@ void criarListaItensSeNaoExistir() {
         fclose(arquivo);
         return;
     }
-
     arquivo = fopen("ListaItens", "wb");
     if (arquivo == NULL) {
         printf("Erro ao criar ListaItens.\n");
         return;
     }
-
     Item item;
     const char *tipos[5] = {"fruta", "bebida", "doce", "salgado", "enlatado"};
     srand(time(NULL));
-
     for (int i = 0; i < MAX_ITENS_INSERIR; i++) {
         int tipoIndex = i % 5;
         strcpy(item.tipo, tipos[tipoIndex]);
@@ -161,24 +144,18 @@ void criarListaItensSeNaoExistir() {
         sprintf(item.setor, "Setor %c", 'A' + tipoIndex);
         fwrite(&item, sizeof(Item), 1, arquivo);
     }
-
     fclose(arquivo);
 }
 
-void mostrarArquivoBinario(const char *nomeArquivo) {
-    FILE *arquivo = fopen(nomeArquivo, "rb");
-    Item item;
-
+void mostrarConteudoArquivo(const char *nomeArquivo) {
+    FILE *arquivo = fopen(nomeArquivo, "r");
     if (arquivo == NULL) {
-        printf("Arquivo %s nao encontrado.\n", nomeArquivo);
+        printf("Erro ao abrir o arquivo %s.\n", nomeArquivo);
         return;
     }
-
-    printf("Conteudo do arquivo %s:\n", nomeArquivo);
-    while (fread(&item, sizeof(Item), 1, arquivo) == 1) {
-        printf("Nome: %s | Tipo: %s | Vencimento: %d | Setor: %s\n",
-               item.nome, item.tipo, item.vencimento, item.setor);
+    char linha[256];
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        printf("%s", linha);
     }
-
     fclose(arquivo);
 }
