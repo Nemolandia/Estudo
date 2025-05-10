@@ -1,97 +1,3 @@
-/**
- * @file EstoqueMercadoArvore.c
- * @brief Implementação de uma estrutura de árvore binária para gerenciar itens de estoque em um mercado.
- * 
- * Este arquivo contém funções para criar, manipular e persistir uma estrutura de árvore binária
- * para gerenciar itens de estoque. Os itens são categorizados por tipo e armazenados em arquivos separados.
- * A árvore suporta operações como inserção, travessia e remoção de itens vencidos.
- * 
- * 
- */
-
- /**
-    * @brief Inicializa a árvore binária, definindo a raiz como NULL.
-    * 
-    * @param raiz Ponteiro para a raiz da árvore.
-    
-void criarArvore(Arvore *raiz);*/
-
-/**
- * @brief Aloca memória para um novo nó da árvore e o inicializa com o item fornecido.
- * 
- * @param item O item a ser armazenado no novo nó.
- * @return Ponteiro para o nó recém-alocado.
-No* alocarNo(Item item);*/
-
-/**
- * @brief Libera a memória alocada para toda a árvore.
- * 
- * @param raiz A raiz da árvore a ser liberada.
-void liberarArvore(Arvore raiz);*/
-
-/**
- * @brief Insere um novo item na árvore binária.
- * 
- * @param raiz Ponteiro para a raiz da árvore.
- * @param item O item a ser inserido.
-void inserirItem(Arvore *raiz, Item item);*/
-
-/**
- * @brief Exibe o conteúdo da árvore binária em uma travessia em ordem.
- * 
- * @param raiz A raiz da árvore a ser exibida.
-void mostrarArvore(Arvore raiz);*/
-
-/**
- * @brief Organiza os itens da árvore por tipo e os grava em arquivos correspondentes.
- * 
- * Os itens são categorizados em tipos predefinidos (ex.: "fruta", "bebida") e gravados
- * em arquivos separados. Itens com tipos desconhecidos não são gravados.
- * 
- * @param raiz A raiz da árvore a ser organizada e gravada em arquivos.
-void organizarEGravarArvore(Arvore raiz);*/
-
-/**
- * @brief Remove itens vencidos de um arquivo e atualiza o arquivo.
- * 
- * Lê itens do arquivo especificado, remove itens vencidos e grava os itens restantes
- * em um arquivo temporário, que substitui o arquivo original.
- * 
- * @param nomeArquivo O nome do arquivo a ser processado.
-void removerItensVencidosArvore(const char *nomeArquivo);*/
-
-/**
- * @brief Conta o número de itens em um arquivo.
- * 
- * @param nomeArquivo O nome do arquivo a ser contado.
- * @return O número de itens no arquivo.
-int contarItensNoArquivo(const char *nomeArquivo);*/
-
-/**
- * @brief Carrega itens de um arquivo em uma árvore binária.
- * 
- * Lê itens do arquivo "ListaItens" e os insere em uma árvore binária.
- * O número de itens lidos é limitado por MAX_ITENS_INSERIR.
- * 
- * @param quantidadeLida Ponteiro para um inteiro para armazenar o número de itens lidos.
- * @return A raiz da árvore binária contendo os itens carregados.
-Arvore carregarItensEmArvore(int *quantidadeLida);*/
-
-/**
- * @brief Cria o arquivo "ListaItens" com dados de exemplo, caso ele não exista.
- * 
- * Gera uma lista de itens com datas de vencimento aleatórias e tipos predefinidos,
- * e os grava no arquivo "ListaItens".
-void criarListaItensSeNaoExistir();*/
-
-/**
- * @brief Exibe o conteúdo de um arquivo.
- * 
- * Lê e imprime os itens armazenados no arquivo especificado.
- * 
- * @param nomeArquivo O nome do arquivo a ser exibido.
-void mostrarArquivo(const char *nomeArquivo);*/
-
 #include "EstoqueMercadoArvore.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,7 +49,7 @@ void mostrarArvore(Arvore raiz) {
 
 void organizarEGravarArvore(Arvore raiz) {
     const char *nomesArquivos[5] = {
-        "ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados"
+        "ListaFrutasArvore.bin", "ListaBebidasArvore.bin", "ListaDocesArvore.bin", "ListaSalgadosArvore.bin", "ListaEnlatadosArvore.bin"
     };
 
     if (raiz == NULL)
@@ -154,23 +60,21 @@ void organizarEGravarArvore(Arvore raiz) {
     if (raiz->item.vencimento > 0) {
         const char *nomeArquivo = NULL;
 
-        printf("Item: %s | Tipo detectado: [%s]\n", raiz->item.nome, raiz->item.tipo);
-
         if (strcmp(raiz->item.tipo, "fruta") == 0) nomeArquivo = nomesArquivos[0];
         else if (strcmp(raiz->item.tipo, "bebida") == 0) nomeArquivo = nomesArquivos[1];
         else if (strcmp(raiz->item.tipo, "doce") == 0) nomeArquivo = nomesArquivos[2];
         else if (strcmp(raiz->item.tipo, "salgado") == 0) nomeArquivo = nomesArquivos[3];
         else if (strcmp(raiz->item.tipo, "enlatado") == 0) nomeArquivo = nomesArquivos[4];
-        else {
-            printf("Tipo desconhecido: %s - Item %s nao sera gravado.\n", raiz->item.tipo, raiz->item.nome);
-        }
 
         if (nomeArquivo != NULL) {
-            FILE *arquivo = fopen(nomeArquivo, "ab");
+            FILE *arquivo = fopen(nomeArquivo, "a");  // Modo de texto para anexar
+
             if (arquivo == NULL) {
                 printf("Erro ao abrir o arquivo %s para gravacao.\n", nomeArquivo);
             } else {
-                fwrite(&(raiz->item), sizeof(Item), 1, arquivo);
+                // Gravando os dados no formato legível como texto
+                fprintf(arquivo, "Nome: %s | Tipo: %s | Vencimento: %d | Setor: %s\n",
+                        raiz->item.nome, raiz->item.tipo, raiz->item.vencimento, raiz->item.setor);
                 fclose(arquivo);
                 printf("Gravado: %s em %s\n", raiz->item.nome, nomeArquivo);
             }
@@ -216,7 +120,7 @@ int contarItensNoArquivo(const char *nomeArquivo) {
 }
 
 Arvore carregarItensEmArvore(int *quantidadeLida) {
-    FILE *arquivo = fopen("ListaItens", "rb");
+    FILE *arquivo = fopen("ListaItens.bin", "rb");
     if (arquivo == NULL) return NULL;
 
     Arvore raiz = NULL;
@@ -233,13 +137,13 @@ Arvore carregarItensEmArvore(int *quantidadeLida) {
 }
 
 void criarListaItensSeNaoExistir() {
-    FILE *arquivo = fopen("ListaItens", "rb");
+    FILE *arquivo = fopen("ListaItens.bin", "rb");
     if (arquivo != NULL) {
         fclose(arquivo);
         return;
     }
 
-    arquivo = fopen("ListaItens", "wb");
+    arquivo = fopen("ListaItens.bin", "wb");
     if (arquivo == NULL) {
         printf("Erro ao criar ListaItens.\n");
         return;
@@ -261,7 +165,7 @@ void criarListaItensSeNaoExistir() {
     fclose(arquivo);
 }
 
-void mostrarArquivo(const char *nomeArquivo) {
+void mostrarArquivoBinario(const char *nomeArquivo) {
     FILE *arquivo = fopen(nomeArquivo, "rb");
     Item item;
 

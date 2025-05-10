@@ -1,56 +1,56 @@
-/**
- * @file EstoqueMercadoArvoreMain.c
- * @brief Programa principal para gerenciar o estoque de um mercado utilizando uma estrutura de árvore.
- *
- * Este programa realiza as seguintes operações:
- * - Cria uma lista de itens, caso ela não exista.
- * - Carrega os itens da lista em uma estrutura de árvore.
- * - Organiza e grava a árvore em um arquivo.
- * - Mostra o conteúdo de arquivos específicos relacionados ao estoque.
- * - Remove itens vencidos da árvore e atualiza os arquivos correspondentes.
- * - Exibe os arquivos após a remoção dos itens vencidos.
- * - Libera a memória alocada para a árvore ao final da execução.
- *
- * @note O programa utiliza os seguintes arquivos de estoque: 
- *       "ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados".
- *
- * @dependencies EstoqueMercadoArvore.h
- *
- * 
- */
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoArvore.h"
+#include "EstoqueMercadoArvore.c"
 
 int main() {
     Arvore estoque;
     int quantidadeLida;
 
+    // Cria a lista de itens se não existir
     criarListaItensSeNaoExistir();
+
+    // Carrega os itens da lista para a árvore
     estoque = carregarItensEmArvore(&quantidadeLida);
 
     if (quantidadeLida == 0) {
         printf("Nenhum item foi carregado da ListaItens.\n");
+        return 1;
     } else {
-        printf("Itens carregados: %d\n", quantidadeLida);
-        organizarEGravarArvore(estoque);
+        printf("Total de itens carregados: %d\n", quantidadeLida);
     }
 
+    // Mostra a árvore
+    printf("\n--- Itens na Árvore ---\n");
+    mostrarArvore(estoque);
+
+    // Organiza e grava os itens nos arquivos binários
+    organizarEGravarArvore(estoque);
+
     const char *arquivos[5] = {
-        "ListaFrutas", "ListaBebidas", "ListaDoces", "ListaSalgados", "ListaEnlatados"
+        "ListaFrutasArvore.bin",
+        "ListaBebidasArvore.bin",
+        "ListaDocesArvore.bin",
+        "ListaSalgadosArvore.bin",
+        "ListaEnlatadosArvore.bin"
     };
 
+    // Mostra o conteúdo dos arquivos antes da remoção de vencidos
+    printf("\n--- Arquivos Antes da Remoção de Vencidos ---\n");
     for (int i = 0; i < 5; i++) {
         printf("\nArquivo: %s\n", arquivos[i]);
-        mostrarArquivo(arquivos[i]);
+        mostrarArquivoBinario(arquivos[i]);
+    }
+
+    // Remove itens vencidos
+    for (int i = 0; i < 5; i++) {
         removerItensVencidosArvore(arquivos[i]);
     }
 
-    printf("\nApos remocao dos itens vencidos:\n");
-
+    // Mostra novamente os arquivos após remoção de vencidos
+    printf("\n--- Arquivos Após a Remoção de Vencidos ---\n");
     for (int i = 0; i < 5; i++) {
         printf("\nArquivo: %s\n", arquivos[i]);
-        mostrarArquivo(arquivos[i]);
+        mostrarArquivoBinario(arquivos[i]);
     }
 
     liberarArvore(estoque);

@@ -1,6 +1,17 @@
+/*****************************************************************************
+ * Nome: Aplicação estoque de supermercado feito em C com Lista Dinâmica
+ * Descrição: Essa aplicação tem como objetivo gerenciar o estoque de um supermercado,
+ *          utilizando uma Lista Dinâmica para armazenar os itens e suas informações.
+ * Autor: Isadora Gesaro Rezende,
+          Jeovanni Conservani Silva,
+          Khevyn Henrique G. T. Alves,
+          Leonardo de Arruda Macedo
+ * Data da última modificação: 09/05/2025
+ *****************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoLista.c"
+#include "EstoqueMercadoLista.h"
 
 int main()
 {

@@ -1,3 +1,14 @@
+/**************************************************************************************************
+ * Nome: TAD - Lista Dinãmica para Estoque de Supermercado
+ * Descrição: Essa TAD foi criada com o objetivo de gerenciar o estoque de um supermercado,
+ *          utilizando uma Lista Dinâmica para armazenar os itens e suas informações.
+ * Autor: Isadora Gesaro Rezende,
+          Jeovanni Conservani Silva,
+          Khevyn Henrique G. T. Alves,
+          Leonardo de Arruda Macedo
+ * Data da última modificação: 09/05/2025
+ *************************************************************************************************/
+
 #include "EstoqueMercadoLista.h"
 #include <stdio.h>
 #include <stdlib.h>

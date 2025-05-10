@@ -1,8 +1,8 @@
 #ifndef MERCADO_ARVORE_H
 #define MERCADO_ARVORE_H
 
-#define MAX_ITENS_INSERIR 3000
-#define MAX_ESTOQUE 2500
+#define MAX_ITENS_INSERIR 500
+#define MAX_ESTOQUE 450
 
 typedef struct Item {
     char nome[50];
@@ -29,6 +29,6 @@ void removerItensVencidosArvore(const char *nomeArquivo);
 int contarItensNoArquivo(const char *nomeArquivo);
 Arvore carregarItensEmArvore(int *quantidadeLida);
 void criarListaItensSeNaoExistir();
-void mostrarArquivo(const char *nomeArquivo);
+void mostrarArquivoBinario(const char *nomeArquivo);
 
 #endif

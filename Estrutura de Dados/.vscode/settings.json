@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "MLTable": "yaml",
+        "time.h": "c"
+    }
+}
