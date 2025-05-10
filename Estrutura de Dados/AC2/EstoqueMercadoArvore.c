@@ -49,7 +49,7 @@ void mostrarArvore(Arvore raiz) {
 
 void organizarEGravarArvore(Arvore raiz) {
     const char *nomesArquivos[5] = {
-        "ListaFrutasArvore.bin", "ListaBebidasArvore.bin", "ListaDocesArvore.bin", "ListaSalgadosArvore.bin", "ListaEnlatadosArvore.bin"
+        "ListaFrutasArvore", "ListaBebidasArvore", "ListaDocesArvore", "ListaSalgadosArvore", "ListaEnlatadosArvore"
     };
 
     if (raiz == NULL)
@@ -86,7 +86,7 @@ void organizarEGravarArvore(Arvore raiz) {
 
 void removerItensVencidosArvore(const char *nomeArquivo) {
     FILE *arquivoOriginal = fopen(nomeArquivo, "rb");
-    FILE *arquivoTemp = fopen("temp.bin", "wb");
+    FILE *arquivoTemp = fopen("temp", "wb");
     Item item;
 
     if (arquivoOriginal == NULL || arquivoTemp == NULL) {
@@ -103,7 +103,7 @@ void removerItensVencidosArvore(const char *nomeArquivo) {
     fclose(arquivoOriginal);
     fclose(arquivoTemp);
     remove(nomeArquivo);
-    rename("temp.bin", nomeArquivo);
+    rename("temp", nomeArquivo);
 }
 
 int contarItensNoArquivo(const char *nomeArquivo) {
@@ -120,7 +120,7 @@ int contarItensNoArquivo(const char *nomeArquivo) {
 }
 
 Arvore carregarItensEmArvore(int *quantidadeLida) {
-    FILE *arquivo = fopen("ListaItens.bin", "rb");
+    FILE *arquivo = fopen("ListaItens", "rb");
     if (arquivo == NULL) return NULL;
 
     Arvore raiz = NULL;
@@ -137,13 +137,13 @@ Arvore carregarItensEmArvore(int *quantidadeLida) {
 }
 
 void criarListaItensSeNaoExistir() {
-    FILE *arquivo = fopen("ListaItens.bin", "rb");
+    FILE *arquivo = fopen("ListaItens", "rb");
     if (arquivo != NULL) {
         fclose(arquivo);
         return;
     }
 
-    arquivo = fopen("ListaItens.bin", "wb");
+    arquivo = fopen("ListaItens", "wb");
     if (arquivo == NULL) {
         printf("Erro ao criar ListaItens.\n");
         return;

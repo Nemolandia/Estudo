@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoLista.h"
+#include "EstoqueMercadoLista.c"
 
 int main()
 {

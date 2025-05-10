@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "MLTable": "yaml",
-        "time.h": "c"
+        "time.h": "c",
+        "process.h": "c"
     }
 }

@@ -27,11 +27,11 @@ int main() {
     organizarEGravarArvore(estoque);
 
     const char *arquivos[5] = {
-        "ListaFrutasArvore.bin",
-        "ListaBebidasArvore.bin",
-        "ListaDocesArvore.bin",
-        "ListaSalgadosArvore.bin",
-        "ListaEnlatadosArvore.bin"
+        "ListaFrutasArvore",
+        "ListaBebidasArvore",
+        "ListaDocesArvore",
+        "ListaSalgadosArvore",
+        "ListaEnlatadosArvore"
     };
 
     // Mostra o conteúdo dos arquivos antes da remoção de vencidos

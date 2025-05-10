@@ -31,4 +31,6 @@ Arvore carregarItensEmArvore(int *quantidadeLida);
 void criarListaItensSeNaoExistir();
 void mostrarArquivoBinario(const char *nomeArquivo);
 
+int contarNos(Arvore raiz);
+
 #endif
