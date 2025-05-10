@@ -2,6 +2,10 @@
     "files.associations": {
         "MLTable": "yaml",
         "time.h": "c",
-        "process.h": "c"
+        "process.h": "c",
+        "estoquemercadolista.h": "c",
+        "psapi.h": "c",
+        "string.h": "c",
+        "testeslistawin.h": "c"
     }
 }

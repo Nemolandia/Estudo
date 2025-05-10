@@ -1,8 +1,19 @@
+/**************************************************************************************************
+ * Nome: Cabecalho do TAD - Árvore Binária de Busca (ABB) para Estoque de Supermercado
+ * Descrição: Cabecalho do TAD que define a estrutura de dados e as funções para manipulação da árvore
+ *            binária.
+ * Autor: Isadora Gesaro Rezende,
+          Jeovanni Conservani Da Silva,
+          Khevyn Henrique G. T. Alves,
+          Leonardo de Arruda Macedo
+ * Data da última modificação: 08/05/2025
+ *************************************************************************************************/
+
 #ifndef MERCADO_ARVORE_H
 #define MERCADO_ARVORE_H
 
-#define MAX_ITENS_INSERIR 500
-#define MAX_ESTOQUE 450
+#define MAX_ITENS_INSERIR 5000
+#define MAX_ESTOQUE 4500
 
 typedef struct Item {
     char nome[50];
@@ -29,6 +40,6 @@ void removerItensVencidosArvore(const char *nomeArquivo);
 int contarItensNoArquivo(const char *nomeArquivo);
 Arvore carregarItensEmArvore(int *quantidadeLida);
 void criarListaItensSeNaoExistir();
-void mostrarConteudoArquivo(const char *nomeArquivo); // Nova função
+void mostrarConteudoArquivo(const char *nomeArquivo); 
 
 #endif

@@ -1,6 +1,17 @@
+/*****************************************************************************
+ * Nome: Aplicação estoque de supermercado feito em C com árvore binária de busca
+ * Descrição: Essa aplicação tem como objetivo gerenciar o estoque de um supermercado,
+ *          utilizando uma árvore binária de busca para armazenar os itens e suas informações.
+ * Autor: Isadora Gesaro Rezende,
+          Jeovanni Conservani Da Silva,
+          Khevyn Henrique G. T. Alves,
+          Leonardo de Arruda Macedo
+ * Data da última modificação: 09/05/2025
+ *****************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "EstoqueMercadoArvore.c"
+#include "EstoqueMercadoArvore.h"
 
 int main() {
     Arvore estoque;
